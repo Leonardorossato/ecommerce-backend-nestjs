@@ -14,7 +14,7 @@ export class Users {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: false, unique: true })
   email: string;
 
   @Column()
