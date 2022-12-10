@@ -11,6 +11,8 @@ import * as cacheManager from 'cache-manager';
 import { CreateUserDTO } from './dto/create.user.dto';
 import { Users } from './entities/user.entity';
 import { MailerService } from '@nestjs-modules/mailer';
+import { EmailConfirmationTokenDTO } from './dto/comfirmation.email.toke.dto';
+import { AuthLoginDTO } from 'src/auth/dto/login.auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -55,6 +57,15 @@ export class UsersService {
         'Erro to fin a userEmail',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async findOneByEmail(dto: AuthLoginDTO) {
+    try {
+      const user = await this.usersRepository.findOneBy({ email: dto.email });
+      return user;
+    } catch (error) {
+      throw new NotFoundException('Email não encontrado');
     }
   }
 
