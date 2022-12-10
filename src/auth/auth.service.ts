@@ -21,7 +21,7 @@ export class AuthService {
     private readonly jwtSerivce: JwtService,
     private readonly checkPassword: CheckPassword,
   ) {}
-  async loginCredentials(dto: AuthLoginDTO) {
+  async login(dto: AuthLoginDTO) {
     let user: any;
     try {
       user = await this.usersService.findOneByEmail({
@@ -43,7 +43,7 @@ export class AuthService {
     }
   }
 
-  async registerUser(dto: RegisterAuthDTO) {
+  async register(dto: RegisterAuthDTO) {
     try {
       const hasPassword = await bcrypt.hash(dto.password, 10);
       const newUser = await this.usersService.create({
