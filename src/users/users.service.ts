@@ -1,29 +1,31 @@
 import {
+  CACHE_MANAGER,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes } from 'crypto';
 import { FindOneOptions, Repository } from 'typeorm';
-import * as cacheManager from 'cache-manager';
 import { CreateUserDTO } from './dto/create.user.dto';
 import { Users } from './entities/user.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EmailConfirmationTokenDTO } from './dto/comfirmation.email.toke.dto';
 import { AuthLoginDTO } from 'src/auth/dto/login.auth.dto';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UsersService {
-  public memoryCache;
 
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
     private readonly mailService: MailerService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache
   ) {
-    this.memoryCache = cacheManager.caching('memory');
+
   }
 
   async all(): Promise<Users[]> {
@@ -73,14 +75,15 @@ export class UsersService {
     try {
       const email = dto.email;
       const recoverToken = randomBytes(3).toString('hex');
-      await this.memoryCache.set(recoverToken, { ...dto });
-      const userEmail = await this.usersRepository.findOneBy({
+      await this.cacheManager.set(recoverToken, { ...dto });
+      const user = await this.usersRepository.findOneBy({
         email: dto.email,
       });
-      if (userEmail) {
+      if (user) {
         throw new HttpException('Email already exitis', HttpStatus.BAD_REQUEST);
       }
-      if (!userEmail) {
+
+      if (!user) {
         const mail = {
           to: email,
           from: 'noreply@application.com',
@@ -92,7 +95,7 @@ export class UsersService {
         };
         await this.mailService.sendMail(mail);
       }
-      return await this.usersRepository.save(userEmail);
+      return await this.usersRepository.save(user)
     } catch (error) {
       throw new NotFoundException('Erro to create a new User');
     }

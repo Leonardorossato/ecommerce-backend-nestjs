@@ -51,7 +51,7 @@ export class AuthService {
         password: hasPassword,
       });
       newUser.password = undefined;
-
+      await this.usersService.create(newUser)
       return newUser;
     } catch (error) {
       throw new HttpException(
