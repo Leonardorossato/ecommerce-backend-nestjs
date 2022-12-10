@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: ecommerce-backend-nestjs
+    image: postgres
+    environment:
+      POSTGRES_DB: ecommerce-backend-nestjs
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456789
+    ports:
+      - '5434:5432'
+    restart: unless-stopped
