@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { EmailConfirmationTokenDTO } from './dto/comfirmation.email.toke.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('Usuarios')

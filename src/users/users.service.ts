@@ -99,21 +99,7 @@ export class UsersService {
     }
   }
 
-  async emailConfirmationToken(dto: EmailConfirmationTokenDTO) {
-    try {
-      const verify = await this.cacheManager.get(dto.token);
-      if (!verify) {
-        throw new HttpException(
-          'Token invalid',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-      return verify;
-    } catch (error) {
-      throw new HttpException('Token inspired', HttpStatus.BAD_REQUEST);
-    }
-  }
-
+  
   async delete(id: number) {
     try {
       const user = await this.usersRepository.findOneBy({ id: id });
