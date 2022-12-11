@@ -92,10 +92,25 @@ export class UsersService {
         };
         await this.mailService.sendMail(mail);
       }
-      const response = await this.usersRepository.save(dto)
-      return response
+      const response = await this.usersRepository.save(dto);
+      return response;
     } catch (error) {
       throw new NotFoundException('Erro to create a new User');
+    }
+  }
+
+  async emailConfirmationToken(dto: EmailConfirmationTokenDTO) {
+    try {
+      const verify = await this.cacheManager.get(dto.token);
+      if (!verify) {
+        throw new HttpException(
+          'Token invalid',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      return verify;
+    } catch (error) {
+      throw new HttpException('Token inspired', HttpStatus.BAD_REQUEST);
     }
   }
 
