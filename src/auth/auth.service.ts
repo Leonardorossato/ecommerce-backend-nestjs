@@ -22,9 +22,8 @@ export class AuthService {
     private readonly checkPassword: CheckPassword,
   ) {}
   async login(dto: AuthLoginDTO) {
-    let user: any;
     try {
-      user = await this.usersService.findOneByEmail({
+      const user = await this.usersService.findOneByEmail({
         email: dto.email,
         password: dto.password,
       });
@@ -46,13 +45,11 @@ export class AuthService {
   async register(dto: RegisterAuthDTO) {
     try {
       const hasPassword = await bcrypt.hash(dto.password, 10);
-      const newUser = await this.usersService.create({
+      const user = await this.usersService.create({
         ...dto,
         password: hasPassword,
       });
-      newUser.password = undefined;
-      await this.usersService.create(newUser)
-      return newUser;
+      return user;
     } catch (error) {
       throw new HttpException(
         'Error creating a new user',

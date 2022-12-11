@@ -13,10 +13,5 @@ export class RegisterAuthDTO {
 
     @IsNotEmpty()
     @ApiProperty({ nullable: false, type: String })
-    password: string;
-
-    @IsNotEmpty()
-    @ApiProperty({ nullable: false, type: String })
-    @Matches(/^\+[0-11]{3}\.?[0-11]{3}\.?[0-11]{3}\-?[0-11]{2}$/)
-    cpf: string;   
+    password: string; 
 }

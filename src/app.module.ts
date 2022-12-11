@@ -22,7 +22,7 @@ import { typeOrmAsyncConfig } from './config/ormconfig';
           secure: false,
           auth: {
             user: config.get('MAIL_USER'),
-            pass: config.get('MAIL_PASSWORD'),
+            pass: config.get('MAIL_PASS'),
           },
         },
         defaults: {
@@ -36,7 +36,7 @@ import { typeOrmAsyncConfig } from './config/ormconfig';
           },
         },
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
   ],
 })

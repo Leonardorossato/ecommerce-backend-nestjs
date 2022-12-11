@@ -18,15 +18,12 @@ import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UsersService {
-
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
     private readonly mailService: MailerService,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache
-  ) {
-
-  }
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+  ) {}
 
   async all(): Promise<Users[]> {
     try {
@@ -72,30 +69,31 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDTO) {
+    const email = dto.email;
+    const user = await this.usersRepository.findOneBy({
+      email: dto.email,
+    });
+    const recoverToken = randomBytes(3).toString('hex');
+    await this.cacheManager.set(recoverToken, { ...dto });
     try {
-      const email = dto.email;
-      const recoverToken = randomBytes(3).toString('hex');
-      await this.cacheManager.set(recoverToken, { ...dto });
-      const user = await this.usersRepository.findOneBy({
-        email: dto.email,
-      });
       if (user) {
-        throw new HttpException('Email already exitis', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
       }
 
       if (!user) {
         const mail = {
           to: email,
-          from: 'noreply@application.com',
+          from: 'noreply@example.com',
           subject: 'Confirmação do email',
-          template: 'confirmation',
+          template: '../templates/confirmation.hbs',
           context: {
             token: recoverToken,
           },
         };
         await this.mailService.sendMail(mail);
       }
-      return await this.usersRepository.save(user)
+      const response = await this.usersRepository.save(dto)
+      return response
     } catch (error) {
       throw new NotFoundException('Erro to create a new User');
     }
