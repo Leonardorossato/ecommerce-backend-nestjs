@@ -1,13 +1,9 @@
 import {
-  CACHE_MANAGER,
   HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
+  HttpStatus, Injectable,
   NotFoundException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cache } from 'cache-manager';
 import { AuthLoginDTO } from 'src/auth/dto/login.auth.dto';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create.user.dto';
@@ -18,7 +14,6 @@ export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async all(): Promise<Users[]> {
