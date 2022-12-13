@@ -69,34 +69,16 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDTO) {
-    const email = dto.email;
-    const user = await this.usersRepository.findOneBy({
-      email: dto.email,
-    });
-    const recoverToken = randomBytes(3).toString('hex');
-    await this.cacheManager.set(recoverToken, { ...dto });
-    try {
-      if (user) {
-        throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
-      }
-
-      if (!user) {
-        const mail = {
-          to: email,
-          from: 'noreply@example.com',
-          subject: 'Confirmação do email',
-          template: '../templates/confirmation.hbs',
-          context: {
-            token: recoverToken,
-          },
-        };
-        await this.mailService.sendMail(mail);
-      }
-      const response = await this.usersRepository.save(dto);
-      return response;
-    } catch (error) {
-      throw new NotFoundException('Erro to create a new User');
+   try {
+    const user = await this.usersRepository.findOneBy({ email: dto.email });
+    if (user) {
+      throw new HttpException('Email already exists', HttpStatus.BAD_GATEWAY)
     }
+    await this.usersRepository.save(user)
+    return user;
+   } catch (error) {
+    throw new HttpException('Email not found', HttpStatus.BAD_REQUEST)
+   }
   }
 
   
