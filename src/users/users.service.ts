@@ -4,24 +4,20 @@ import {
   HttpStatus,
   Inject,
   Injectable,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { randomBytes } from 'crypto';
+import { Cache } from 'cache-manager';
+import { AuthLoginDTO } from 'src/auth/dto/login.auth.dto';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create.user.dto';
 import { Users } from './entities/user.entity';
-import { MailerService } from '@nestjs-modules/mailer';
-import { EmailConfirmationTokenDTO } from './dto/comfirmation.email.toke.dto';
-import { AuthLoginDTO } from 'src/auth/dto/login.auth.dto';
-import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
-    private readonly mailService: MailerService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 

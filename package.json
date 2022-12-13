@@ -20,7 +20,6 @@
     "migration:gen": "yarn build && yarn typeorm migration:generate"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.2.1",
@@ -37,7 +36,6 @@
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
     "handlebars": "^4.7.7",
-    "nodemailer": "^6.8.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
