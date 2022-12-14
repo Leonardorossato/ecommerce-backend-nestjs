@@ -5,7 +5,6 @@ import { StripeModule } from 'nestjs-stripe';
 import { AuthModule } from './auth/auth.module';
 import { typeOrmAsyncConfig } from './config/ormconfig';
 import { UsersModule } from './users/users.module';
-import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -17,7 +16,6 @@ import { CardModule } from './card/card.module';
       apiKey: process.env.STRIPE_PUBLIC_KEY,
       apiVersion: '2022-11-15',
     }),
-    CardModule,
   ],
 })
 export class AppModule {}
