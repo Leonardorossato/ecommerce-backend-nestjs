@@ -29,6 +29,6 @@ export class Users {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @Column()
+  @Column({ nullable: true })
   stripeCustomerId: string;
 }
