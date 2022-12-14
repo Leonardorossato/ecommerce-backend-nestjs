@@ -17,7 +17,7 @@ export class Users {
   @Column({ nullable: false, unique: true })
   email: string;
 
-  @Column({nullable: false})
+  @Column({ nullable: false })
   password: string;
 
   @Column({ default: true })
@@ -28,4 +28,7 @@ export class Users {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @Column()
+  stripeCustomerId: string;
 }
