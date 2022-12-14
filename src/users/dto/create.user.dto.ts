@@ -6,4 +6,6 @@ export class CreateUserDTO {
   email: string;
 
   password: string;
+
+  stripeCustomer: string;
 }
