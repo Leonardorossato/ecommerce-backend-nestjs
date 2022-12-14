@@ -1,7 +1,8 @@
 import {
   HttpException,
-  HttpStatus, Injectable,
-  NotFoundException
+  HttpStatus,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthLoginDTO } from 'src/auth/dto/login.auth.dto';
@@ -60,19 +61,22 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDTO) {
-   try {
-    const user = await this.usersRepository.findOneBy({ email: dto.email });
-    if (user) {
-      throw new HttpException('Email already exists', HttpStatus.BAD_GATEWAY)
+    try {
+      const user = await this.usersRepository.findOneBy({ email: dto.email });
+      if (user) {
+        throw new HttpException('Email already exists', HttpStatus.BAD_GATEWAY);
+      }
+      const res = await this.usersRepository.create({
+        ...user,
+        stripeCustomerId: dto.stripeCustomer
+      });
+      await this.usersRepository.save(res);
+      return res;
+    } catch (error) {
+      throw new HttpException('Email not found', HttpStatus.BAD_REQUEST);
     }
-    await this.usersRepository.save(user)
-    return user;
-   } catch (error) {
-    throw new HttpException('Email not found', HttpStatus.BAD_REQUEST)
-   }
   }
 
-  
   async delete(id: number) {
     try {
       const user = await this.usersRepository.findOneBy({ id: id });
