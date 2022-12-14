@@ -67,7 +67,7 @@ export class UsersService {
         throw new HttpException('Email already exists', HttpStatus.BAD_GATEWAY);
       }
       const res = await this.usersRepository.create({
-        ...user,
+        ...dto,
         stripeCustomerId: dto.stripeCustomer
       });
       await this.usersRepository.save(res);
